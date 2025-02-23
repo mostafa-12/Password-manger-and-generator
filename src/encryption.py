@@ -31,14 +31,13 @@ def Encrypt(Person):
     passwordsJson = json.dumps(data["passwords"]).encode()
     data["passwords"] = Cipher.encrypt(passwordsJson).decode()
     return person.Person.creatPerson(data)
-def Decrypt(person):
+def Decrypt(Person):
     global Cipher
     
-    data = person.toDict()
+    data = Person.toDict()
     
-    passwordsJson = json.loads(data["passwords"]).encode()
-    
-    data["passwords"] = Cipher.decrypt(passwordsJson)
+    data["passwords"] = Cipher.decrypt(data["passwords"].encode()).decode()
+    return person.Person.creatPerson(data)
 
 def hashing(Person):
     userInfo = Person.toDict()
@@ -49,12 +48,8 @@ def hashing(Person):
     userInfo["Name"] = bcrypt.hashpw(userName,userSlat).decode()
     userInfo["Password"] = bcrypt.hashpw(userPassword,passwordSlat).decode()
     return person.Person.creatPerson(userInfo)
-def atLogin(name, password, person):
-    userInfo = person.toDict()
-    if bcrypt.checkpw(name.encode(),userInfo["Name"]) and bcrypt.checkpw(password.encode(),userInfo["Password"]):
-        return True
-    else:
-        return False
+
+
 
 
 

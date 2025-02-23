@@ -1,6 +1,7 @@
 from colorama import Fore
 import password_manager
 import encryption
+import pwinput
 
 def main():
     print(Fore.RED,"""
@@ -62,8 +63,7 @@ def main():
             userName = input()    
             
 
-            print(Fore.GREEN,"user password : ",end="")
-            accPassword = input()
+            accPassword = pwinput.pwinput(prompt =f"{Fore.GREEN}Password : " )
 
             person = password_manager.creatAccount(userName,accPassword)
 
@@ -76,7 +76,7 @@ def main():
                     print(Fore.RED,"enter site-mail-password")
                     passwordItems = input().split("-") 
                     password = {"site": passwordItems[0], "mail" : passwordItems[1], "password" : passwordItems[2]}
-                    password_manager.addPass(person,password)
+                    person = password_manager.addPass(person,password)
 
                 
                 elif des.lower() == "no" or  des.lower() == "n":
@@ -94,7 +94,39 @@ def main():
                 print(err)
 
         elif choice == "3":
-            pass
+            
+            print(Fore.GREEN,"account's name : ",end="")
+            userName = input()    
+            
+            accPassword = pwinput.pwinput(prompt =f"{Fore.GREEN}Password : " )
+            
+            user = password_manager.loadUser(userName,accPassword)
+            user = encryption.Decrypt(user)
+            if not user :
+                print("user name or password is wrong please check your data and try again")
+                continue
+
+            while True:
+                print(Fore.BLUE,f"Hello {userName}\nwhat do you want \n0-exit\n1-show all passwords\n2-add password \n3-delete password\n=> ",end="")
+                choice = input()
+                if choice == "0":
+                    exit()
+                elif choice == "1":
+                    
+                    print(Fore.BLUE,user.showInfo())
+                elif choice == "2":
+                    print(Fore.RED,"enter site-mail-password")
+                    passwordItems = input().split("-") 
+                    password = {"site": passwordItems[0], "mail" : passwordItems[1], "password" : passwordItems[2]}
+                    user = password_manager.addPass(user,password)
+                elif choice == "3":
+                    print(Fore.RED,"enter site-mail-password")
+                    passwordItems = input().split("-") 
+                    password = {"site": passwordItems[0], "mail" : passwordItems[1], "password" : passwordItems[2]}
+                    password_manager.removePass(user,password)
+                else:
+                    print(Fore.RED,"Invalid input, please try again with enter a valid input")
+                    continue
         elif choice == "4":
             print(password_manager.generateToken())
             print("*" * 50)

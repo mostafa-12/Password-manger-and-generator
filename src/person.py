@@ -12,18 +12,7 @@ class Person:
         }
     
     def showInfo(self):
-        return f"""
-    -----------------------------------------------------------------------
-    user Name : {self.userName}
-    
-    password : {self.password}
-    -----------------------------------------------------------------------
-    
-    you password list : {'\n'.join(self.dictPassword)}
-    
-    -----------------------------------------------------------------------    
-    """
-    
+        return self.dictPassword  
     @classmethod 
     def creatPerson(cls, user):
         return cls(user["Name"], user["Password"], user["passwords"])

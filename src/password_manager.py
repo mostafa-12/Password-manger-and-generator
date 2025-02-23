@@ -22,20 +22,23 @@ def creatAccount(userName,password):
     
     return person.Person(userName,password)
 
-def addPass(person, password):
+def addPass(Person, password):
     
-    data = person.toDict()
+    data = Person.toDict()
+    data["passwords"] = json.loads(data["passwords"])
     if password not in data["passwords"]:
         data["passwords"].append(password)
+        return person.Person.creatPerson(data)
     else:
         print(f"{password} is already exist")
-
+        return False
 def removePass(person, password):
     data = person.toDict()
+    data["passwords"] = json.loads(data["passwords"])
     if password in data["passwords"]:
         del data["passwords"][data["passwords"].index(password)]
     else:
-        print(f"{password} is not already exist")
+        print(f"{password} is not exist")
 
 def saveUser(person):
     user = person.toDict()
@@ -53,14 +56,13 @@ def saveUser(person):
 def loadUser(userName,password):
     userName = userName.encode()
     password = password.encode()
-    with open(dataPath,"r") as file:
+    with open(dataFile,"r") as file:
         users = json.load(file)
         
     for user in users["users"]:
-        if bcrypt.checkpw(userName, user["Name"]) and bcrypt.checkpw(password, user["Password"]):
-            print("hello ",userName.decode())
-            return person.createPerson(user)
-        else:
-            print("user name or password is wrong please check your data and try again later")
-            return False
+        if bcrypt.checkpw(userName, user["Name"].encode()) and bcrypt.checkpw(password, user["Password"].encode()):
+            
+            return person.Person.creatPerson(user)
+       
+    return False
     
